@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+<script>
+    //
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector("#getdata").addEventListener("click", getData);
+    });
+
+    function status(response) {
+        if (response.status >= 200 && response.status < 300) {
+            return Promise.resolve(response)
+        } else {
+            return Promise.reject(new Error(response.statusText))
+        }
+    }
+
+    function getData() {
+
+        console.log(document.querySelector("#name").value)
+        let im = document.getElementById("image")
+        im.classList.remove('hidden')
+        // document.querySelector("#data").innerHTML = "loading...";
+
+        
+        let pathToUser = 'https://api.github.com/users/' + document.querySelector("#name").value      
+        fetch(pathToUser)
+
+            .then(status)
+
+            .then(res => res.json())
+
+            .then(json => {
+                const Uname = document.querySelector("#name").value
+                // you must inspect the response to understand it's format
+                document.querySelector("#data").innerHTML = `username is ${Uname} he have  ${json.followers} followers` ; // remove the loading message
+                im.classList.add('hidden')
+
+            })
+            .catch(function(err) {
+                document.querySelector("#data").innerHTML = "something went wrong...try again later " + err.message;
+                im.classList.add('hidden')
+            });
+    }
+
+</script>
+    <input id="name" type=text placeholder="init username of the search" > </input>
+
+<h1>Reddit</h1>
+<p>This is an example Ajax call to Github site . We display the repo of some user.</p>
+<div  >
+<img id="image"  class="hidden" src="waitAnimation.png" alt="" >
+</div >
+<div >
+<button id="getdata">Get github User Info:</button>
+</div>
+</html>
+<ol id="data">
+</ol>
+
+</body>
+</html>
